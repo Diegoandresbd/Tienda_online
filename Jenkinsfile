@@ -7,6 +7,10 @@ pipeline {
     }
 
     environment {
+        
+         // Añadimos la ruta de Docker al PATH de Jenkins
+    PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
+    
         // Variables para que docker-compose cree la base de datos
         MYSQL_ROOT_PASSWORD = 'root_password_segura'
         MYSQL_DATABASE      = 'tienda_online'
