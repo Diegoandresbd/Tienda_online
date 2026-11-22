@@ -29,14 +29,14 @@ pipeline {
             steps {
                 echo 'Construyendo la imagen de la aplicación web...'
                 // Usamos bat porque Jenkins está en Windows
-                bat 'docker compose build'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose build'
             }
         }
 
         stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
-                bat 'docker compose up -d'
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose up -d'
                 
                 echo 'Esperando a que la base de datos y la web estén listas...'
                 // Pausa de 20 segundos
@@ -55,7 +55,7 @@ pipeline {
         always {
             echo 'Limpiando: Deteniendo y eliminando los contenedores...'
             // Se ejecuta SIEMPRE, incluso si falla el paso anterior
-            bat 'docker compose down'
+            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose down'
         }
     }
 }
