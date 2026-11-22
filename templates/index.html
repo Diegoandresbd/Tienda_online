@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Glamour Beauty{% endblock %}
+
+{% block content %}
+<!-- Hero Section Minimalista -->
+<div class="row align-items-center mb-5 pb-5 border-bottom">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-light mb-4">Descubre tu belleza esencial.</h1>
+        <p class="lead text-muted mb-5">Productos de maquillaje de alta calidad, seleccionados para resaltar lo que ya eres.</p>
+        <a href="/productos" class="btn btn-dark btn-lg px-5">Explorar Tienda</a>
+    </div>
+    <div class="col-md-6 text-center">
+        <!-- Imagen real de Unsplash de maquillaje minimalista -->
+        <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop" 
+             alt="Maquillaje minimalista" 
+             class="img-fluid" style="max-height: 500px; object-fit: cover;">
+    </div>
+</div>
+
+<!-- Sección de Beneficios (Texto simple, sin iconos grandes) -->
+<div class="row text-center mt-5 pt-5">
+    <div class="col-md-4 mb-4">
+        <h5 class="fw-normal">Envío Rápido</h5>
+        <p class="text-muted small">Recibe tus productos en 24-48 horas.</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <h5 class="fw-normal">Calidad Premium</h5>
+        <p class="text-muted small">Marcas originales y cruelty-free.</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <h5 class="fw-normal">Asesoría Personalizada</h5>
+        <p class="text-muted small">Te ayudamos a encontrar tu tono ideal.</p>
+    </div>
+</div>
+{% endblock %}
