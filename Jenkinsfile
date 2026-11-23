@@ -5,7 +5,11 @@ pipeline {
         pollSCM('H/5 * * * *')
     }
 
-    environment {
+        environment {
+        // Añadimos la carpeta de Docker al PATH de Jenkins
+        // Usamos la ruta que ya conocemos de tu PC
+        PATH = "C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
+
         MYSQL_ROOT_PASSWORD = 'root_password_segura'
         MYSQL_DATABASE      = 'tienda_online'
         MYSQL_USER          = 'usuario_tienda'
