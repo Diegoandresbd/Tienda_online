@@ -22,15 +22,15 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Construyendo la imagen de la aplicación web...'
-                // Ruta absoluta hacia docker.exe para Windows
-                bat 'docker compose build'
+                // Usando la ruta exacta de tu usuario LENOVO
+                bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose build'
             }
         }
 
         stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
-                bat 'docker compose up -d'
+                bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose up -d'
                 
                 echo 'Esperando a que la base de datos y la web estén listas...'
                 bat 'timeout /t 20 /nobreak'
@@ -46,7 +46,7 @@ pipeline {
     post {
         always {
             echo 'Limpiando: Deteniendo y eliminando los contenedores...'
-           bat 'docker compose down'
+            bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose down'
         }
     }
 }
