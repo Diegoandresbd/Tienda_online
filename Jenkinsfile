@@ -2,12 +2,10 @@ pipeline {
     agent any
 
     triggers {
-        // Poll SCM: Jenkins revisará GitHub cada 5 minutos
         pollSCM('H/5 * * * *')
     }
 
     environment {
-        // Variables para la base de datos
         MYSQL_ROOT_PASSWORD = 'root_password_segura'
         MYSQL_DATABASE      = 'tienda_online'
         MYSQL_USER          = 'usuario_tienda'
@@ -24,7 +22,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Construyendo la imagen de la aplicación web...'
-                // Usamos la ruta absoluta entre comillas dobles
+                // Ruta absoluta hacia docker.exe para Windows
                 bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose build'
             }
         }
