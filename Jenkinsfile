@@ -23,14 +23,14 @@ pipeline {
             steps {
                 echo 'Construyendo la imagen de la aplicación web...'
                 // Ruta absoluta hacia docker.exe para Windows
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose build'
+                bat 'docker compose build'
             }
         }
 
         stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose up -d'
+                bat 'docker compose up -d'
                 
                 echo 'Esperando a que la base de datos y la web estén listas...'
                 bat 'timeout /t 20 /nobreak'
@@ -46,7 +46,7 @@ pipeline {
     post {
         always {
             echo 'Limpiando: Deteniendo y eliminando los contenedores...'
-            bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose down'
+           bat 'docker compose down'
         }
     }
 }
