@@ -1,5 +1,5 @@
 import os
-
+from contextlib import contextmanager
 from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 from dotenv import load_dotenv
@@ -19,6 +19,18 @@ def get_db_connection():
         database=os.getenv("MYSQL_DATABASE")
     )
 
+@contextmanager
+def get_db_cursor(dictionary=False):
+    conn = get_db_connection()
+    cursor = None
+    try:
+        cursor = conn.cursor(dictionary=dictionary)
+        yield conn, cursor
+    finally:
+        if cursor is not None:
+            cursor.close()
+        conn.close()
+
 # 1. Ruta de Inicio (Index)
 @app.route('/')
 def index():
@@ -28,12 +40,9 @@ def index():
 @app.route('/productos')
 def productos():
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True) # dictionary=True nos devuelve los datos como diccionarios
-        cursor.execute("SELECT * FROM productos")
-        lista_productos = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        with get_db_cursor(dictionary=True) as (_, cursor):
+            cursor.execute("SELECT * FROM productos")
+            lista_productos = cursor.fetchall()
         return render_template('productos.html', productos=lista_productos)
     except Exception as e:
         return f"Error al conectar con la base de datos: {e}"
@@ -42,17 +51,17 @@ def productos():
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
-        nombre = request.form['nombre']
-        email = request.form['email']
-        
+        nombre = request.form['nombre'].strip()
+        email = request.form['email'].strip()
+
+        if not nombre or not email:
+            flash('Nombre y correo electrónico son obligatorios.', 'danger')
+            return redirect(url_for('registro'))
+
         try:
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            # Insertar el nuevo cliente en la base de datos
-            cursor.execute("INSERT INTO clientes (nombre, email) VALUES (%s, %s)", (nombre, email))
-            conn.commit() # Guardar los cambios
-            cursor.close()
-            conn.close()
+            with get_db_cursor() as (conn, cursor):
+                cursor.execute("INSERT INTO clientes (nombre, email) VALUES (%s, %s)", (nombre, email))
+                conn.commit()
             flash('¡Cliente registrado con éxito!', 'success')
             return redirect(url_for('registro'))
         except mysql.connector.Error as err:
@@ -64,26 +73,20 @@ def registro():
 @app.route('/historial')
 def historial():
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-        
-        # Consulta para ver las compras junto con el nombre del cliente y el producto
-        query = """
-            SELECT c.fecha_compra, cl.nombre AS cliente, p.nombre AS producto, c.cantidad, c.total 
-            FROM compras c
-            JOIN clientes cl ON c.cliente_id = cl.id
-            JOIN productos p ON c.producto_id = p.id
-            ORDER BY c.fecha_compra DESC
-        """
-        cursor.execute(query)
-        lista_compras = cursor.fetchall()
-        
-        # También traemos la lista de clientes registrados
-        cursor.execute("SELECT * FROM clientes ORDER BY fecha_registro DESC")
-        lista_clientes = cursor.fetchall()
-        
-        cursor.close()
-        conn.close()
+        with get_db_cursor(dictionary=True) as (_, cursor):
+            query = """
+                SELECT c.fecha_compra, cl.nombre AS cliente, p.nombre AS producto, c.cantidad, c.total 
+                FROM compras c
+                JOIN clientes cl ON c.cliente_id = cl.id
+                JOIN productos p ON c.producto_id = p.id
+                ORDER BY c.fecha_compra DESC
+            """
+            cursor.execute(query)
+            lista_compras = cursor.fetchall()
+
+            cursor.execute("SELECT * FROM clientes ORDER BY fecha_registro DESC")
+            lista_clientes = cursor.fetchall()
+
         return render_template('historial.html', compras=lista_compras, clientes=lista_clientes)
     except Exception as e:
         return f"Error al cargar el historial: {e}"
