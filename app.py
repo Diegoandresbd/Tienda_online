@@ -25,7 +25,7 @@ def index():
     return render_template('index.html')
 
 # 2. Ruta para ver el Catálogo de Productos (Inventario)
-@app.route('/productos')
+@app.route('/productos-rotos')
 def productos():
     try:
         conn = get_db_connection()
