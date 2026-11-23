@@ -30,21 +30,37 @@ pipeline {
             }
         }
 
-        stage('Deploy & Test') {
+               stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
                 bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose up -d'
                 
-                echo 'Esperando a que la base de datos y la web estén listas...'
-                bat 'ping 127.0.0.1 -n 21 > nul'
-                
-                echo 'Ejecutando operación de ejemplo: Verificando que la web responda...'
-                bat 'curl -f http://localhost:5000/productos || exit 1'
+                echo 'Esperando a que la web responda (máximo 30 segundos)...'
+                // Usamos un bucle para verificar si la web está lista sin usar 'ping' ni 'timeout'
+                script {
+                    def maxIntentos = 10
+                    def exito = false
+                    for (int i = 1; i <= maxIntentos; i++) {
+                        try {
+                            // Intentamos conectarnos a la página de productos
+                            bat 'curl -f -s http://localhost:5000/productos'
+                            echo "¡La web respondió en el intento ${i}!"
+                            exito = true
+                            break
+                        } catch (Exception e) {
+                            echo "Intento ${i} fallido. La web aún no responde. Esperando 3 segundos..."
+                            // Hacemos una pausa de 3 segundos usando una técnica de Powershell
+                            bat 'powershell -Command "Start-Sleep -Seconds 3"'
+                        }
+                    }
+                    if (!exito) {
+                        error "La verificación de la web falló después de ${maxIntentos} intentos."
+                    }
+                }
                 
                 echo '¡Verificación exitosa! La web está en línea.'
             }
         }
-    }
 
     post {
         always {
