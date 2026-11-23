@@ -6,11 +6,14 @@ pipeline {
     }
 
     environment {
-        MYSQL_ROOT_PASSWORD = 'root_password_segura'
-        MYSQL_DATABASE      = 'tienda_online'
-        MYSQL_USER          = 'usuario_tienda'
-        MYSQL_PASSWORD      = 'contraseña_segura_tienda'
-    }
+    // Añadimos la carpeta de Docker al PATH para que encuentre el credential helper
+    PATH = "C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
+    
+    MYSQL_ROOT_PASSWORD = 'root_password_segura'
+    MYSQL_DATABASE      = 'tienda_online'
+    MYSQL_USER          = 'usuario_tienda'
+    MYSQL_PASSWORD      = 'contraseña_segura_tienda'
+}
 
     stages {
         stage('Checkout') {
