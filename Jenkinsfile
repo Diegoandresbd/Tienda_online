@@ -6,14 +6,11 @@ pipeline {
     }
 
     environment {
-    // Añadimos la carpeta de Docker al PATH para que encuentre el credential helper
-    PATH = "C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
-    
-    MYSQL_ROOT_PASSWORD = 'root_password_segura'
-    MYSQL_DATABASE      = 'tienda_online'
-    MYSQL_USER          = 'usuario_tienda'
-    MYSQL_PASSWORD      = 'contraseña_segura_tienda'
-}
+        MYSQL_ROOT_PASSWORD = 'root_password_segura'
+        MYSQL_DATABASE      = 'tienda_online'
+        MYSQL_USER          = 'usuario_tienda'
+        MYSQL_PASSWORD      = 'contraseña_segura_tienda'
+    }
 
     stages {
         stage('Checkout') {
@@ -25,31 +22,27 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Construyendo la imagen de la aplicación web...'
-                // Usando la ruta exacta de tu usuario LENOVO
                 bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose build'
             }
         }
 
-               stage('Deploy & Test') {
+        stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
                 bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose up -d'
                 
                 echo 'Esperando a que la web responda (máximo 30 segundos)...'
-                // Usamos un bucle para verificar si la web está lista sin usar 'ping' ni 'timeout'
                 script {
                     def maxIntentos = 10
                     def exito = false
                     for (int i = 1; i <= maxIntentos; i++) {
                         try {
-                            // Intentamos conectarnos a la página de productos
                             bat 'curl -f -s http://localhost:5000/productos'
                             echo "¡La web respondió en el intento ${i}!"
                             exito = true
                             break
                         } catch (Exception e) {
                             echo "Intento ${i} fallido. La web aún no responde. Esperando 3 segundos..."
-                            // Hacemos una pausa de 3 segundos usando una técnica de Powershell
                             bat 'powershell -Command "Start-Sleep -Seconds 3"'
                         }
                     }
@@ -61,6 +54,7 @@ pipeline {
                 echo '¡Verificación exitosa! La web está en línea.'
             }
         }
+    }
 
     post {
         always {
