@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Deploy & Test') {
+                stage('Deploy & Test') {
             steps {
                 echo 'Levantando los contenedores (web y db)...'
                 bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose up -d'
@@ -41,13 +41,15 @@ pipeline {
                     def exito = false
                     for (int i = 1; i <= maxIntentos; i++) {
                         try {
-                            bat 'curl -f -s http://localhost:5000/productos'
+                            // Usamos la ruta absoluta de curl.exe en Windows
+                            bat '"C:\\Windows\\System32\\curl.exe" -f -s http://localhost:5000/productos'
                             echo "¡La web respondió en el intento ${i}!"
                             exito = true
                             break
                         } catch (Exception e) {
                             echo "Intento ${i} fallido. La web aún no responde. Esperando 3 segundos..."
-                            bat 'powershell -Command "Start-Sleep -Seconds 3"'
+                            // Usamos la ruta absoluta de powershell.exe
+                            bat '"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Start-Sleep -Seconds 3"'
                         }
                     }
                     if (!exito) {
@@ -58,7 +60,6 @@ pipeline {
                 echo '¡Verificación exitosa! La web está en línea.'
             }
         }
-    }
 
     post {
         always {
