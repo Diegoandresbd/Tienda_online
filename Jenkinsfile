@@ -36,7 +36,7 @@ pipeline {
                 bat '"C:\\Users\\LENOVO\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" compose up -d'
                 
                 echo 'Esperando a que la base de datos y la web estén listas...'
-                bat 'timeout /t 20 /nobreak'
+                bat 'ping 127.0.0.1 -n 21 > nul'
                 
                 echo 'Ejecutando operación de ejemplo: Verificando que la web responda...'
                 bat 'curl -f http://localhost:5000/productos || exit 1'
