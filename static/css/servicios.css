@@ -1,0 +1,18 @@
+.servicios {
+    max-width: 960px;
+}
+
+.servicios-tarjeta {
+    background-color: #fff8fa;
+    border: 1px solid #ead9df;
+    border-radius: 8px;
+}
+
+.servicios-tarjeta h2 {
+    color: #743d53;
+}
+
+.servicios-tarjeta p {
+    color: #51474b;
+    line-height: 1.5;
+}

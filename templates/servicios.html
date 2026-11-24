@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Servicios - Glamour Beauty{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/servicios.css') }}">
+
+<section class="container servicios py-5" aria-labelledby="titulo-servicios">
+    <header class="text-center mb-4">
+        <h1 id="titulo-servicios" class="h2 fw-light">Nuestros servicios</h1>
+        <p class="text-muted">
+            Encuentra el maquillaje ideal para tu estilo y para cada ocasión.
+        </p>
+    </header>
+
+    <div class="row g-3 justify-content-center">
+        <div class="col-md-4">
+            <article class="servicios-tarjeta h-100 p-4">
+                <h2 class="h5">Maquillaje social</h2>
+                <p class="mb-0">
+                    Maquillaje para fiestas, graduaciones y eventos especiales.
+                </p>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <article class="servicios-tarjeta h-100 p-4">
+                <h2 class="h5">Asesoría de maquillaje</h2>
+                <p class="mb-0">
+                    Te ayudamos a elegir tonos y productos según tu piel y tus gustos.
+                </p>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <article class="servicios-tarjeta h-100 p-4">
+                <h2 class="h5">Clase de automaquillaje</h2>
+                <p class="mb-0">
+                    Aprende a preparar tu piel y a crear un maquillaje sencillo para el día a día.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

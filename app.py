@@ -91,6 +91,11 @@ def historial():
     except Exception as e:
         return f"Error al cargar el historial: {e}"
 
+
+@app.route("/servicios")
+def servicios():    
+    return render_template("servicios.html")
+
 # Iniciar la aplicación
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
